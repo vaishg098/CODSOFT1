@@ -1,1 +1,129 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+
+
+class Book {
+public:
+    std::string title;
+    std::string author;
+    std::string ISBN;
+    bool available;
+
+    Book(const std::string& title, const std::string& author, const std::string& ISBN)
+        : title(title), author(author), ISBN(ISBN), available(true) {}
+};
+
+class Library {
+private:
+    std::vector<Book> books;
+    std::map<std::string, std::string> checkedOutBooks; 
+    std::map<std::string, double> fines; 
+
+public:
+    void addBook(const std::string& title, const std::string& author, const std::string& ISBN) {
+        books.push_back(Book(title, author, ISBN));
+    }
+
+    void searchBooks(const std::string& searchTerm) {
+        std::cout << "Search Results:" << std::endl;
+        for (const Book& book : books) {
+            if (book.title.find(searchTerm) != std::string::npos ||
+                book.author.find(searchTerm) != std::string::npos ||
+                book.ISBN.find(searchTerm) != std::string::npos) {
+                std::cout << "Title: " << book.title << std::endl;
+                std::cout << "Author: " << book.author << std::endl;
+                std::cout << "ISBN: " << book.ISBN << std::endl;
+                std::cout << "Available: " << (book.available ? "Yes" : "No") << std::endl;
+                std::cout << std::endl;
+            }
+        }
+    }
+
+    void checkoutBook(const std::string& ISBN, const std::string& borrower) {
+        for (Book& book : books) {
+            if (book.ISBN == ISBN && book.available) {
+                book.available = false;
+                checkedOutBooks[ISBN] = borrower;
+                std::cout << "Book checked out successfully!" << std::endl;
+                return;
+            }
+        }
+        std::cout << "Book not found or already checked out." << std::endl;
+    }
+
+    void returnBook(const std::string& ISBN) {
+        if (checkedOutBooks.find(ISBN) != checkedOutBooks.end()) {
+            std::string borrower = checkedOutBooks[ISBN];
+            checkedOutBooks.erase(ISBN);
+            std::cout << "Book returned successfully by " << borrower << std::endl;
+            calculateFine(ISBN);
+            return;
+        }
+        std::cout << "Book not found or not checked out." << std::endl;
+    }
+
+    void calculateFine(const std::string& ISBN) {
+        
+        fines[ISBN] += 2.00;
+        std::cout << "Fine for ISBN " << ISBN << ": $" << fines[ISBN] << std::endl;
+    }
+};
+
+int main() {
+    Library library;
+    library.addBook("Book1", "Author1", "123456");
+    library.addBook("Book2", "Author2", "789012");
+    library.addBook("Book3", "Author3", "345678");
+
+    while (true) {
+        std::cout << "Library Management System" << std::endl;
+        std::cout << "1. Search Books" << std::endl;
+        std::cout << "2. Checkout Book" << std::endl;
+        std::cout << "3. Return Book" << std::endl;
+        std::cout << "4. Exit" << std::endl;
+        std::cout << "Enter your choice: ";
+
+        int choice;
+        std::cin >> choice;
+
+        if (choice == 4) {
+            break;
+        }
+
+        switch (choice) {
+            case 1: {
+                std::cout << "Enter search term: ";
+                std::string searchTerm;
+                std::cin.ignore();
+                std::getline(std::cin, searchTerm);
+                library.searchBooks(searchTerm);
+                break;
+            }
+            case 2: {
+                std::cout << "Enter ISBN of the book to checkout: ";
+                std::string ISBN;
+                std::cin >> ISBN;
+                std::cout << "Enter borrower's name: ";
+                std::string borrower;
+                std::cin.ignore();
+                std::getline(std::cin, borrower);
+                library.checkoutBook(ISBN, borrower);
+                break;
+            }
+            case 3: {
+                std::cout << "Enter ISBN of the book to return: ";
+                std::string ISBN;
+                std::cin >> ISBN;
+                library.returnBook(ISBN);
+                break;
+            }
+            default:
+                std::cout << "Invalid choice. Please try again." << std::endl;
+        }
+    }
+
+    return 0;
+}
 
