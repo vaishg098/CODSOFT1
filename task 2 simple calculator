@@ -1,1 +1,42 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int no1, no2;
+    char x;
+    while (true){
+        
+        cout<<"enter number one"<<endl;
+        cin>>no1;
+        
+        cout<<"enter number two"<<endl;
+        cin>>no2;
+        
+        cout<<"press a for addition"<<endl;
+        cout<<"press b for subtraction"<<endl;
+        cout<<"press c for multipication"<<endl;
+        cout<<"press d for division"<<endl;
+        cin>>x;
+        
+        if (x== 'a')
+        cout<<"the sum = "<<no1 + no2<<endl;
+        
+        else if (x== 'b')
+        cout<<"the subtraction = "<<no1 - no2<<endl;
+        
+        else if (x== 'c')
+        cout<<"the multipiction = "<<no1 * no2<<endl;
+        
+        else if (x== 'd')
+        cout<<"the division = "<<no1 / no2<<endl;
+        
+        else
+        cout<<"invalid operation"<<endl;
+        
+    }
+
+    
+}
 
